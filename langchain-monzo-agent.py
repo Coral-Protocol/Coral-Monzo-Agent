@@ -9,9 +9,7 @@ from langchain_core.tools import tool
 from dotenv import load_dotenv
 from anyio import ClosedResourceError
 import urllib.parse
-from langchain_openai import ChatOpenAI
 from langchain_ollama import ChatOllama
-from langchain_groq import ChatGroq
 import requests
 from datetime import datetime
 
@@ -22,10 +20,12 @@ logger = logging.getLogger(__name__)
 # Load environment variables
 load_dotenv()
 
-base_url = "http://localhost:5555/devmode/exampleApplication/privkey/session1/sse"
+base_url = os.getenv("CORAL_SSE_URL")
+agentID = os.getenv("CORAL_AGENT_ID")
+
 params = {
-    "waitForAgents": 1,
-    "agentId": "monzo_agent",
+    #"waitForAgents": 1,
+    "agentId": agentID,
     "agentDescription": """An agent responsible for answering banking-related questions based on the user's Monzo account. 
     You must only use the provided tools to fulfill user requests."""
 }

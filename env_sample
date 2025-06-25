@@ -1,2 +1,10 @@
 MONZO_ACCESS_TOKEN=
 MONZO_ACCOUNT_ID=
+# use for docker
+#<!-- CORAL_SSE_URL=http://host.docker.internal:5555/devmode/exampleApplication/privkey/session1/sse -->
+# use for local mode
+CORAL_SSE_URL=http://localhost:5555/devmode/exampleApplication/privkey/session1/sse
+# Interface input
+HUMAN_RESPONSE="Hello Coral!"
+# Agent ID
+CORAL_AGENT_ID=monzo_agent
