@@ -32,10 +32,6 @@ params = {
 query_string = urllib.parse.urlencode(params)
 MCP_SERVER_URL = f"{base_url}?{query_string}"
 
-# Validate API keys
-if not os.getenv("OPENAI_API_KEY"):
-    raise ValueError("OPENAI_API_KEY is not set in environment variables.")
-
 def get_tools_description(tools):
     return "\n".join(f"Tool: {t.name}, Schema: {json.dumps(t.args).replace('{', '{{').replace('}', '}}')}" for t in tools)
     
@@ -178,18 +174,6 @@ async def create_monzo_agent(client, tools):
         base_url="http://localhost:11434",  # default Ollama port
         temperature=0.7,
     )
-
-    '''model = ChatGroq(
-        model="llama-3.3-70b-versatile",
-        temperature=0.3
-    )'''
-
-    '''model = ChatOpenAI(
-        model="gpt-4.1-2025-04-14",
-        api_key=os.getenv("OPENAI_API_KEY"),
-        temperature=0.3,
-        max_tokens=32768
-    )'''
 
     agent = create_tool_calling_agent(model, tools, prompt)
     return AgentExecutor(agent=agent, tools=tools, verbose=True)
