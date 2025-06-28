@@ -5,6 +5,7 @@ import logging
 from langchain_mcp_adapters.client import MultiServerMCPClient
 from langchain.prompts import ChatPromptTemplate
 from langchain.agents import create_tool_calling_agent, AgentExecutor
+from langchain.chat_models import init_chat_model
 from langchain_core.tools import tool
 from dotenv import load_dotenv
 from anyio import ClosedResourceError
@@ -12,6 +13,7 @@ import urllib.parse
 from langchain_ollama import ChatOllama
 import requests
 from datetime import datetime
+import traceback
 
 # Setup logging
 logging.basicConfig(level=logging.INFO, format="%(asctime)s - %(levelname)s - %(message)s")
@@ -169,70 +171,60 @@ async def create_monzo_agent(client, tools):
         ("placeholder", "{agent_scratchpad}")
     ])
 
-    model = ChatOllama(
-        model="qwen3:latest",  
-        base_url="http://localhost:11434",  # default Ollama port
-        temperature=0.7,
+    model = init_chat_model(
+        model=os.getenv("MODEL"),
+        model_provider=os.getenv("LLM_MODEL_PROVIDER"),
+        api_key=os.getenv("API_KEY"),
+        temperature=0.3,
+        max_tokens=32768
     )
 
     agent = create_tool_calling_agent(model, tools, prompt)
     return AgentExecutor(agent=agent, tools=tools, verbose=True)
 
 async def main():
-    max_retries = 5
-    retry_delay = 5  # seconds
+    CORAL_SERVER_URL = f"{base_url}?{query_string}"
+    logger.info(f"Connecting to Coral Server: {CORAL_SERVER_URL}")
 
-    for attempt in range(max_retries):
-        client = MultiServerMCPClient(
-            connections={
-                "coral": {
-                    "transport": "sse",
-                    "url": MCP_SERVER_URL,
-                    "timeout": 600,
-                    "sse_read_timeout": 600,
-                }
+    client = MultiServerMCPClient(
+        connections={
+            "coral": {
+                "transport": "sse",
+                "url": CORAL_SERVER_URL,
+                "timeout": 600,
+                "sse_read_timeout": 600,
             }
-        )
+        }
+    )
+    logger.info("Coral Server Connection Established")
+
+    tools = await client.get_tools()
+    coral_tool_names = [
+        "list_agents",
+        "create_thread",
+        "add_participant",
+        "remove_participant",
+        "close_thread",
+        "send_message",
+        "wait_for_mentions",
+    ]
+    tools = [tool for tool in tools if tool.name in coral_tool_names]
+    tools += [get_monzo_balance,get_monzo_transaction]
+
+    logger.info(f"Tools Description:\n{get_tools_description(tools)}")
+
+    agent_executor = await create_monzo_agent(client, tools)
+
+    while True:
         try:
-            logger.info(f"Connecting to MCP server at {MCP_SERVER_URL}")
-
-            tools = await client.get_tools()
-            coral_tool_names = [
-                "list_agents",
-                "create_thread",
-                "add_participant",
-                "remove_participant",
-                "close_thread",
-                "send_message",
-                "wait_for_mentions",
-            ]
-            tools = [tool for tool in tools if tool.name in coral_tool_names]
-            tools += [get_monzo_balance,get_monzo_transaction]
-
-            logger.info(f"Tools Description:\n{get_tools_description(tools)}")
-
-            agent_executor = await create_monzo_agent(client, tools)
-            await agent_executor.ainvoke({})
-
-        except ClosedResourceError as e:
-            logger.error(f"ClosedResourceError on attempt {attempt + 1}: {e}")
-            if attempt < max_retries - 1:
-                logger.info(f"Retrying in {retry_delay} seconds...")
-                await asyncio.sleep(retry_delay)
-                continue
-            else:
-                logger.error("Max retries reached. Exiting.")
-                raise
-
+            logger.info("Starting new agent invocation")
+            await agent_executor.ainvoke({"agent_scratchpad": []})
+            logger.info("Completed agent invocation, restarting loop")
+            await asyncio.sleep(1)
         except Exception as e:
-            logger.error(f"Unexpected error on attempt {attempt + 1}: {e}")
-            if attempt < max_retries - 1:
-                logger.info(f"Retrying in {retry_delay} seconds...")
-                await asyncio.sleep(retry_delay)
-                continue
-            else:
-                logger.error("Max retries reached. Exiting.")
-                raise
+            logger.error(f"Error in agent loop: {str(e)}")
+            logger.error(traceback.format_exc())
+            await asyncio.sleep(5)
 
 if __name__ == "__main__":
     asyncio.run(main())

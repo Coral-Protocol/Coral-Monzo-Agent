@@ -1,0 +1,15 @@
+MONZO_ACCESS_TOKEN=
+MONZO_ACCOUNT_ID=
+
+MODEL=llama-3.3-70b-versatile
+LLM_MODEL_PROVIDER=groq
+API_KEY=
+
+# MODEL=gpt-4.1
+# LLM_MODEL_PROVIDER=openai
+# API_KEY=
+
+# use for local mode
+CORAL_SSE_URL=http://localhost:5555/devmode/exampleApplication/privkey/session1/sse
+# Agent ID
+CORAL_AGENT_ID=monzo_agent
