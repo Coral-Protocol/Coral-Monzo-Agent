@@ -14,66 +14,34 @@ The Monzo Agent enables privacy-preserving, conversational access to your Monzo 
 - **Date added**: 20/06/25
 - **License**: MIT
 
-## Use the Agent
+## Setup the Agent
 
-### 1. Install and Run Ollama (for Local LLM)
-<details>
-
-Monzo Agent uses Ollama to run local LLM. Please make sure you have Ollama installed and the desired model downloaded before running the agent.
-
-**Step 1: Install Ollama**
-
-- **Linux/macOS:**
-  Follow the official instructions: [https://ollama.com/download](https://ollama.com/download)
-  Or run:
-  ```bash
-  curl -fsSL https://ollama.com/install.sh | sh
-  ```
-- **Windows:**
-  Download the installer from [Ollama's website](https://ollama.com/download).
-
-**Step 2: Download Local model**
-
-```bash
-ollama pull qwen3:latest
-```
-
-**Step 3: Start Ollama Service**
-
-Ollama usually starts automatically. If not, start it manually:
-```bash
-ollama serve
-```
-
-**Step 4: Verify the model is running**
-
-```bash
-ollama list
-```
-Make sure no errors occur and Ollama is running at `http://localhost:11434`.
-
-</details>
-
-### 2. Clone & Install Dependencies
+### 1. Clone & Install Dependencies
 
 <details>  
 
-Ensure that the [Coral Server](https://github.com/Coral-Protocol/coral-server) is running on your system and the [Interface Agent](https://github.com/Coral-Protocol/Coral-Interface-Agent) is running on the Coral Server.  
-
 ```bash
-# Clone the Monzo Agent repository
+# In a new terminal clone the repository:
 git clone https://github.com/Coral-Protocol/Coral-Monzo-Agent.git
 
-# Navigate to the project directory
+# Navigate to the project directory:
 cd Coral-Monzo-Agent
 
-# Install `uv`:
+# Download and run the UV installer, setting the installation directory to the current one
+curl -LsSf https://astral.sh/uv/install.sh | env UV_INSTALL_DIR=$(pwd) sh
+
+# Create a virtual environment named `.venv` using UV
+uv venv .venv
+
+# Activate the virtual environment
+source .venv/bin/activate
+
+# install uv
 pip install uv
 
 # Install dependencies from `pyproject.toml` using `uv`:
 uv sync
 ```
-This command will read the `pyproject.toml` file and install all specified dependencies in a virtual environment managed by `uv`.
 
 </details>
 
