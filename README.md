@@ -45,7 +45,7 @@ uv sync
 
 </details>
 
-### 3. Configure Environment Variables
+### 2. Configure Environment Variables
 
 Get the API Key:
 [OpenAI](https://platform.openai.com/api-keys) or [GROQ](https://console.groq.com/keys) and MONZO_ACCESS_TOKEN` and `MONZO_ACCOUNT_ID`:
@@ -62,16 +62,84 @@ Add your `API_KEY`, `MONZO_ACCESS_TOKEN`, and `MONZO_ACCOUNT_ID` and any other r
 
 </details>
 
-### 4. Run Agent
+## Run the Agent
+
+You can run in either of the below modes to get your system running.  
+
+- The Executable Model is part of the Coral Protocol Orchestrator which works with [Coral Studio UI](https://github.com/Coral-Protocol/coral-studio).  
+- The Dev Mode allows the Coral Server and all agents to be seaprately running on each terminal without UI support.  
+
+### 1. Executable Mode
+
+Checkout: [How to Build a Multi-Agent System with Awesome Open Source Agents using Coral Protocol](https://github.com/Coral-Protocol/existing-agent-sessions-tutorial-private-temp) and update the file: `coral-server/src/main/resources/application.yaml` with the details below, then run the [Coral Server](https://github.com/Coral-Protocol/coral-server) and [Coral Studio UI](https://github.com/Coral-Protocol/coral-studio). You do not need to set up the `.env` in the project directory for running in this mode; it will be captured through the variables below.
+
 <details>
 
-Run the agent using `uv`:
+For Linux or MAC:
+
 ```bash
-uv run langchain-monzo-agent.py
+# PROJECT_DIR="/PATH/TO/YOUR/PROJECT"
+
+applications:
+  - id: "app"
+    name: "Default Application"
+    description: "Default application for testing"
+    privacyKeys:
+      - "default-key"
+      - "public"
+      - "priv"
+
+registry:
+  monzo:
+    options:
+      - name: "API_KEY"
+        type: "string"
+        description: "API key for the service"
+      - name: "MONZO_ACCESS_TOKEN"
+        type: "string"
+        description: "MONZO_ACCESS_TOKEN"
+      - name: "MONZO_ACCOUNT_ID"
+        type: "string"
+        description: "MONZO_ACCOUNT_ID"
+    runtime:
+      type: "executable"
+      command: ["bash", "-c", "/home/xinxing/coral/coral-orchestrator/Coral-Monzo-Agent/run_agent.sh main.py"]
+      
+      environment:
+        - name: "API_KEY"
+          from: "API_KEY"
+        - name: "MODEL"
+          value: "llama-3.3-70b-versatile"
+        - name: "LLM_MODEL_PROVIDER"
+          value: "groq"
+        - name: "MONZO_ACCESS_TOKEN"
+          from: "MONZO_ACCESS_TOKEN"
+        - name: "MONZO_ACCOUNT_ID"
+          from: "MONZO_ACCOUNT_ID"
+
+```
+
+For Windows, create a powershell command (run_agent.ps1) and run:
+
+```bash
+command: ["powershell","-ExecutionPolicy", "Bypass", "-File", "${PROJECT_DIR}/run_agent.ps1","main.py"]
+```
+
+</details>
+
+### 2. Dev Mode
+
+Ensure that the [Coral Server](https://github.com/Coral-Protocol/coral-server) and [Interface Agent](https://github.com/Coral-Protocol/Coral-Interface-Agent/tree/main) is running on your system and run below command in a separate terminal.
+
+<details>
+
+```bash
+# Run the agent using `uv`:
+uv run python main.py
 ```
 </details>
 
-### 5. Example
+## Example
 <details>
 
 ```bash
