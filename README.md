@@ -48,7 +48,9 @@ uv sync
 ### 2. Configure Environment Variables
 
 Get the API Key:
-[OpenAI](https://platform.openai.com/api-keys) or [GROQ](https://console.groq.com/keys) and `MONZO_ACCESS_TOKEN` and `MONZO_ACCOUNT_ID`:
+[OpenAI](https://platform.openai.com/api-keys) or [GROQ](https://console.groq.com/keys) 
+
+`MONZO_ACCESS_TOKEN` and `MONZO_ACCOUNT_ID`:
 [Monzo Developer Portal](https://developers.monzo.com/)
 
 <details>
