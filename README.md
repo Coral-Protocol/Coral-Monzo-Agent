@@ -46,17 +46,19 @@ uv sync
 </details>
 
 ### 3. Configure Environment Variables
-<details>
 
-Get the `MONZO_ACCESS_TOKEN` and `MONZO_ACCOUNT_ID`:
+Get the API Key:
+[OpenAI](https://platform.openai.com/api-keys) or [GROQ](https://console.groq.com/keys) and MONZO_ACCESS_TOKEN` and `MONZO_ACCOUNT_ID`:
 [Monzo Developer Portal](https://developers.monzo.com/)
+
+<details>
 
 Create a .env file in the project root:
 ```bash
 cp -r env_sample .env
 ```
 
-Add your `MONZO_ACCESS_TOKEN` and `MONZO_ACCOUNT_ID` and any other required environment variables to the .env file.
+Add your `API_KEY`, `MONZO_ACCESS_TOKEN`, and `MONZO_ACCOUNT_ID` and any other required environment variables to the .env file.
 
 </details>
 
