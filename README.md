@@ -1,10 +1,10 @@
 ## [Monzo Agent](https://github.com/Coral-Protocol/Coral-Monzo-Agent)
 
-The Monzo Agent allows you to securely access and analyze your Monzo banking data using a local LLM, ensuring privacy and security. By integrating with Monzo’s official API and custom toolkits, the agent enables natural language interactions to check your account balance, view transaction history, and receive personalized financial advice—all without exposing your sensitive information to external servers.
+The Monzo Agent allows you to securely access and analyze your Monzo banking data using a local LLM/LLM provided by Groq, ensuring privacy and security. By integrating with Monzo’s official API and custom toolkits, the agent enables natural language interactions to check your account balance, view transaction history, and receive personalized financial advice—all without exposing your sensitive information to external servers.
 
 ## Responsibility
 
-The Monzo Agent enables privacy-preserving, conversational access to your Monzo account data. Users can check their balance, review recent transactions, and obtain personal finance insights—all powered by a local LLM that processes data securely on your own device.
+The Monzo Agent enables privacy-preserving, conversational access to your Monzo account data. Users can check their balance, review recent transactions, and obtain personal finance insights—all powered by a local LLM/LLM provided by Groq that processes data securely on your own device.
 
 
 ## Details
