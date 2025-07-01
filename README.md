@@ -10,7 +10,7 @@ The Monzo Agent enables privacy-preserving, conversational access to your Monzo 
 ## Details
 - **Framework**: LangChain
 - **Tools used**: Customized Monzo Tools, Coral MCP Tools
-- **AI model**: Qwen3 via Ollama
+- **AI model**: LLama3.3 provided by Groq/Ollama
 - **Date added**: 20/06/25
 - **License**: MIT
 
